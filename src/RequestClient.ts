@@ -10,6 +10,8 @@ export interface RequestCfg {
   search_params?: () => ZodType;
   req_data?: () => ZodType;
   res_data?: () => ZodType;
+
+  res_error?: () => RequestCfg["res_data"];
 }
 
 export interface Middleware {
@@ -80,6 +82,9 @@ export class RequestClient<Cfg extends RequestCfg> {
         {
           method: "POST",
           body: JSON.stringify(req_data),
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
         this.request_config
       )
@@ -122,7 +127,17 @@ export class RequestClient<Cfg extends RequestCfg> {
       search_params_data
     );
 
-    const res = await fetch(url + query_params, this.request_config);
+    const res = await fetch(
+      url + query_params,
+      Object.assign(
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        },
+        this.request_config
+      )
+    );
 
     const data = await (async () => {
       const data = await res.text();
