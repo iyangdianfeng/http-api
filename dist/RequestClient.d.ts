@@ -8,6 +8,7 @@ export interface RequestCfg {
     search_params?: () => ZodType;
     req_data?: () => ZodType;
     res_data?: () => ZodType;
+    res_error?: () => RequestCfg["res_data"];
 }
 export interface Middleware {
     beforeRequestInit?: (req: {

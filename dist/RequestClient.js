@@ -38,6 +38,9 @@ export class RequestClient {
         const res = await fetch(url + query_params, Object.assign({
             method: "POST",
             body: JSON.stringify(req_data),
+            headers: {
+                "Content-Type": "application/json",
+            },
         }, this.request_config));
         const data = await (async () => {
             const data = await res.text();
@@ -67,7 +70,11 @@ export class RequestClient {
         }
         const [url, search_params_data] = params_analysis(this.url, search_params);
         const query_params = get_query_params(this.cfg.search_params?.(), search_params_data);
-        const res = await fetch(url + query_params, this.request_config);
+        const res = await fetch(url + query_params, Object.assign({
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }, this.request_config));
         const data = await (async () => {
             const data = await res.text();
             try {
